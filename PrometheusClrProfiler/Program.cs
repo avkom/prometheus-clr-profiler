@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Diagnostics.Runtime;
 
 namespace PrometheusClrProfiler
@@ -32,7 +31,7 @@ namespace PrometheusClrProfiler
 			while (!cancellationToken.IsCancellationRequested)
 			{
 				SampleCpu(runtime);
-				Task.Delay(interval, cancellationToken);
+				Thread.Sleep(interval);
 			}
 		}
 
@@ -93,6 +92,8 @@ namespace PrometheusClrProfiler
 				{
 					ReportStackTrace(stackString);
 				}
+
+				runtime.Flush();
 			}
 		}
 
