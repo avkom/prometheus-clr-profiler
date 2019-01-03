@@ -4,15 +4,22 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using Microsoft.Diagnostics.Runtime;
+using Prometheus;
 
 namespace PrometheusClrProfiler
 {
 	class Program
 	{
 		private static CancellationTokenSource _cancellationTokenSource;
+		private static Counter _cpuSampleCounter;
 
 		static void Main()
 		{
+			var metricServer = new MetricServer(9999);
+			metricServer.Start();
+
+			_cpuSampleCounter = Metrics.CreateCounter("cpu_sample", "CPU Sample", "stack");
+
 			_cancellationTokenSource = new CancellationTokenSource();
 			Console.CancelKeyPress += (sender, e) => _cancellationTokenSource.Cancel();
 
@@ -22,7 +29,7 @@ namespace PrometheusClrProfiler
 			{
 				ClrRuntime runtime = CreateClrRuntime(dataTarget);
 
-				RunPeriodic(runtime, TimeSpan.FromSeconds(3), _cancellationTokenSource.Token);
+				RunPeriodic(runtime, TimeSpan.FromSeconds(1), _cancellationTokenSource.Token);
 			}
 		}
 
@@ -100,6 +107,7 @@ namespace PrometheusClrProfiler
 		private static void ReportStackTrace(string stackTrace)
 		{
 			Console.WriteLine(stackTrace);
+			_cpuSampleCounter.WithLabels(stackTrace).Inc();
 		}
 	}
 }
