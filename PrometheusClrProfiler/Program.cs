@@ -1,28 +1,41 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Diagnostics.Runtime;
 
 namespace PrometheusClrProfiler
 {
 	class Program
 	{
-		static void Main(string[] args)
+		private static CancellationTokenSource _cancellationTokenSource;
+
+		static void Main()
 		{
+			_cancellationTokenSource = new CancellationTokenSource();
+			Console.CancelKeyPress += (sender, e) => _cancellationTokenSource.Cancel();
+
 			Process[] processes = Process.GetProcessesByName("devenv");
 
 			using (DataTarget dataTarget = DataTarget.AttachToProcess(processes[0].Id, 5000, AttachFlag.Passive))
 			{
 				ClrRuntime runtime = CreateClrRuntime(dataTarget);
 
-				SampleCpu(runtime);
+				RunPeriodic(runtime, TimeSpan.FromSeconds(3), _cancellationTokenSource.Token);
 			}
-
-			Console.ReadLine();
 		}
+
+		private static void RunPeriodic(ClrRuntime runtime, TimeSpan interval, CancellationToken cancellationToken)
+		{
+			while (!cancellationToken.IsCancellationRequested)
+			{
+				SampleCpu(runtime);
+				Task.Delay(interval, cancellationToken);
+			}
+		}
+
 		private static ClrRuntime CreateClrRuntime(DataTarget dataTarget)
 		{
 			// Now check bitness of our program/target:
