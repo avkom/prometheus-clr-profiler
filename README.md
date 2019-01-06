@@ -29,6 +29,9 @@ cpu_sample{stack="System.Threading.ThreadHelper.ThreadStart;System.Threading.Exe
     * Verify Prometeus pulls metrics from `prometheus-clr-profiler` on a page `http://localhost:9090/graph`: enter metric name `cpu_sample` and press Enter. You must see a list of cpu_sample metrics with different labels.
 3. Setup Grafana.
     * Download Grafana from https://grafana.com/grafana/download
-      * Tested with `grafana-5.4.2.windows-amd64.zip`
+      * The plugin works only with https://grafana.com/grafana/download/4.4.3?platform=windows
     * See details about installing Grafana on Windows: http://docs.grafana.org/installation/windows/
 4. Setup grafana-flamegraph-panel Grafana plugin.
+    * Set Metrics -> A: `cpu_sample`
+    * Set Options -> Signature column name: `stack`
+    * Set Options -> Separator character: `;`
