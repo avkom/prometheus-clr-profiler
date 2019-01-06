@@ -32,6 +32,7 @@ cpu_sample{stack="System.Threading.ThreadHelper.ThreadStart;System.Threading.Exe
       * The plugin works only with https://grafana.com/grafana/download/4.4.3?platform=windows
     * See details about installing Grafana on Windows: http://docs.grafana.org/installation/windows/
 4. Setup grafana-flamegraph-panel Grafana plugin.
+    * Copy `dist` folder of https://github.com/samber/grafana-flamegraph-panel to grafana's `data\plugins\` folder.
     * Set Metrics -> A: `cpu_sample`
     * Set Options -> Signature column name: `stack`
     * Set Options -> Separator character: `;`
