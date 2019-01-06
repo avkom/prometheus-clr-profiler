@@ -17,6 +17,13 @@ cpu_sample{stack="System.Threading.ThreadHelper.ThreadStart;System.Threading.Exe
     * Download Prometheus from https://prometheus.io/download/
       * Tested with `prometheus-2.6.0.windows-amd64.tar.gz`
     * Unpack the archive.
-    * Update `prometheus.yml`
+    * Add the following settings to `scrape_configs` section to `prometheus.yml` file:
+```
+  - job_name: 'clr-profiler'
+    static_configs:
+    - targets: ['localhost:9999']
+```
+    * Run `prometheus --config.file=prometheus.yml`. Allow access if Windows dialog appears.
+    * You can verify that Prometheus is serving metrics about itself by navigating to its own metrics endpoint: http://localhost:9090/metrics
 3. Setup Grafana.
 4. Setup grafana-flamegraph-panel Grafana plugin.
