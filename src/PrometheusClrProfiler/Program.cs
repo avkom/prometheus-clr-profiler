@@ -55,20 +55,7 @@ namespace PrometheusClrProfiler
 			// Note I just take the first version of CLR in the process.  You can loop over every loaded
 			// CLR to handle the SxS case where both v2 and v4 are loaded in the process.
 			ClrInfo version = dataTarget.ClrVersions[0];
-
-			// Next, let's try to make sure we have the right Dac to load.  Note we are doing this manually for
-			// illustration.  Simply calling version.CreateRuntime with no arguments does the same steps.
-			string dac = dataTarget.SymbolLocator.FindBinary(version.DacInfo);
-
-			// Finally, check to see if the dac exists.  If not, throw an exception.
-			if (dac == null || !File.Exists(dac))
-			{
-				throw new FileNotFoundException("Could not find the specified dac.", dac);
-			}
-
-			// Now that we have the DataTarget, the version of CLR, and the right dac, we create and return a
-			// ClrRuntime instance.
-			ClrRuntime runtime = version.CreateRuntime(dac);
+			ClrRuntime runtime = version.CreateRuntime();
 			return runtime;
 		}
 
