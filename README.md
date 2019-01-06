@@ -25,5 +25,6 @@ cpu_sample{stack="System.Threading.ThreadHelper.ThreadStart;System.Threading.Exe
 ```
     * Run `prometheus --config.file=prometheus.yml`. Allow access if Windows dialog appears.
     * You can verify that Prometheus is serving metrics about itself by navigating to its own metrics endpoint: http://localhost:9090/metrics
+    * More details on configuring Prometheus: https://prometheus.io/docs/introduction/first_steps/
 3. Setup Grafana.
 4. Setup grafana-flamegraph-panel Grafana plugin.
